@@ -1,15 +1,12 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+import FrontPage from './component/FrontPage';
+import Header from './component/Header';
 
 export default function SimpleContainer() {
   return (
     <React.Fragment>
-      <CssBaseline />
-      <Container maxWidth="sm">
-        Hello SlamBook !!
-      </Container>
+        <Header/>
+        <FrontPage />
     </React.Fragment>
   );
 }
