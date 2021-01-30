@@ -109,8 +109,9 @@ class SlambookCreate extends React.Component {
             disableProceedButton:true,
             proceedModal: false,
             loader:false,
-            generatedLink:false,
-            isCopied:false
+            generatedLink:"https://demo.com/xyz",
+            isCopied:false,
+            error:null
         }
     }
 
@@ -145,28 +146,38 @@ class SlambookCreate extends React.Component {
         copyText.setSelectionRange(0, 99999)
         document.execCommand("copy");
         this.setState({isCopied:true})
+        
+        setTimeout(()=>{
+            this.props.history.push(`/`)
+        },1500)  
     }
 
     handleSubmit(event){
         event.preventDefault();
-        console.log(event)
-        this.setState({loader:true})
-
-        //DEMO CODE Please remove during production setup
-        setTimeout(()=>{
-            this.setState({loader:false, generatedLink:"https://demo.com/xyz"})
-        },3000)
+        let error = this.state.error
+        let uName = document.getElementById('uName').value;
+        let pwd = document.getElementById('pwd').value;
+        if(uName && pwd){
+            this.setState({loader:true})
+            //DEMO CODE Please remove during production setup
+            setTimeout(()=>{
+                this.setState({loader:false, generatedLink:"https://demo.com/xyz"})
+            },3000)    
+        }else{
+            error = "Please create a UserName/Password";
+            this.setState({error})
+        }
     }
 
     render() { 
-        const { data,disableProceedButton,proceedModal,loader,generatedLink,isCopied } = this.state;
+        const { data,disableProceedButton,proceedModal,loader,generatedLink,isCopied,error } = this.state;
         return (  
             <div className="container-fluid"> 
                 <div className="row">
                     <div className="col-12 px-0 position-fixed text-center toplabel">
                         <p className="col-12 mt-2">Create Your own SlamBook</p>
                     </div>
-                    <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
+                    <div className="mainimage position-fixed" style={{opacity: "0.2",zIndex:"-1"}}></div>
                 </div>
                 <div className="p-2 mt-5">
                     <FormGroup aria-label="position" row>
@@ -196,7 +207,7 @@ class SlambookCreate extends React.Component {
                 </Button>
                 </div>
                 {/* Dialog Start from here */}
-                <Dialog maxWidth="md" onClose={()=>this.setState({proceedModal:false})} aria-labelledby="proceed-to-share" open={proceedModal}>
+                <Dialog maxWidth="md" onClose={()=>this.setState({proceedModal:false,generatedLink:false})} aria-labelledby="proceed-to-share" open={proceedModal}>
                 {
                 (generatedLink)?
                 <div className="row m-auto">
@@ -206,16 +217,16 @@ class SlambookCreate extends React.Component {
                             Click on Copy and share with your colleagues.
                         </p>
                     </div>
-                    <span id="shareableLink" className="h2">{generatedLink}</span>
+                    <input type="text" id="shareableLink" className="d-none" value={generatedLink} />
+                    <span className="h2">{generatedLink}</span>
                     <div className=" mt-3">
                         <div className="m-auto col-12">
-                            <Button onClick={null} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
+                            <Button onClick={this.copyLink.bind(this)} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
                                 {
                                 (isCopied)
                                 ?
                                 <span className="text-center w-100 m-2 p-2">
-                                    Link Copied
-                                <LinearProgress color="secondary" /></span>
+                                    Link Copied</span>
                                 :
                                 <span className="h2">Copy Link</span>
                                 }
@@ -237,7 +248,7 @@ class SlambookCreate extends React.Component {
                                 <TextField
                                     required
                                     fullWidth="true"
-                                    id="filled-required"
+                                    id="uName"
                                     label="Username"
                                     variant="filled"
                                     type="text"
@@ -250,7 +261,7 @@ class SlambookCreate extends React.Component {
                                 <TextField
                                     required
                                     fullWidth="true"
-                                    id="filled-required"
+                                    id="pwd"
                                     label="Password"
                                     variant="filled"
                                     type="password"
@@ -258,6 +269,7 @@ class SlambookCreate extends React.Component {
                                 />
                             </div>
                         </div>
+                        {(error)?<span className="text-danger p-2 px-0">{error}</span>:null}
                         <div className=" mt-3">
                             <div className="m-auto col-12">
                                 <Button type="submit" onClick={this.handleSubmit.bind(this)} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
