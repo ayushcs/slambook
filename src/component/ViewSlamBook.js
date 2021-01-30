@@ -1,14 +1,14 @@
 import React from 'react';
-class Header extends React.Component {
+class ViewSlamBook extends React.Component {
     constructor(props) {
         super(props);
         this.state = {  }
     }
     render() { 
         return (
-            <div> Header </div>
+            <div> ViewSlamBook </div>
         );
     }
 }
  
-export default Header;
+export default ViewSlamBook;
