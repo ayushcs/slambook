@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextField, Dialog,DialogTitle, Button,FormGroup,FormControlLabel,Checkbox }from '@material-ui/core/';
+import {TextField, Dialog,LinearProgress, Button,FormGroup,FormControlLabel,Checkbox }from '@material-ui/core/';
 class SlambookCreate extends React.Component {
     constructor(props) {
         super(props);
@@ -108,6 +108,9 @@ class SlambookCreate extends React.Component {
             ],
             disableProceedButton:true,
             proceedModal: false,
+            loader:false,
+            generatedLink:false,
+            isCopied:false
         }
     }
 
@@ -135,13 +138,28 @@ class SlambookCreate extends React.Component {
         }
     }
 
+    copyLink(event){
+        event.preventDefault();
+        var copyText = document.getElementById("shareableLink");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999)
+        document.execCommand("copy");
+        this.setState({isCopied:true})
+    }
+
     handleSubmit(event){
         event.preventDefault();
         console.log(event)
+        this.setState({loader:true})
+
+        //DEMO CODE Please remove during production setup
+        setTimeout(()=>{
+            this.setState({loader:false, generatedLink:"https://demo.com/xyz"})
+        },3000)
     }
 
     render() { 
-        const { data,disableProceedButton,proceedModal } = this.state;
+        const { data,disableProceedButton,proceedModal,loader,generatedLink,isCopied } = this.state;
         return (  
             <div className="container-fluid bg-green"> 
                 <div className="h1 pt-2 pb-2"> Create Your own SlamBook. </div>
@@ -171,20 +189,87 @@ class SlambookCreate extends React.Component {
 
 
                 {/* Dialog Start from here */}
-                <Dialog maxWidth="xl" className="p-2 m-2" onClose={()=>this.setState({proceedModal:false})} aria-labelledby="proceed-to-share" open={proceedModal}>
-                    <div className="h1">Final Step</div>
-                    <span className="text-danger"> Create a UserName & Password. to view your all slamBook</span>
-                    <form className="row m-4 p-2" noValidate autoComplete="off">
-                        <TextField className="" required id="standard-required" label="User Name" />
-                        < br />
-                        <TextField  className="" required id="standard-required" label="Password" />
-                        < br />
-                        <Button type="submit" onClick={this.handleSubmit.bind(this)} variant="contained" color="secondary" className="w-100 mt-2 mb-4 p-2">
-                            <span className="h2">Generate Link</span>
-                        </Button>
+                <Dialog maxWidth="md" onClose={()=>this.setState({proceedModal:false})} aria-labelledby="proceed-to-share" open={proceedModal}>
+                {
+                (generatedLink)?
+                <div className="row m-auto">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Hurrey! Link Generated</h4>
+                        <p>
+                            Click on Copy and share with your colleagues.
+                        </p>
+                    </div>
+                    <span id="shareableLink" className="h2">{generatedLink}</span>
+                    <div className=" mt-3">
+                        <div className="m-auto col-12">
+                            <Button onClick={null} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
+                                {
+                                (isCopied)
+                                ?
+                                <span className="text-center w-100 m-2 p-2">
+                                    Link Copied
+                                <LinearProgress color="secondary" /></span>
+                                :
+                                <span className="h2">Copy Link</span>
+                                }
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+                :
+                <div className="row m-auto">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Final Step</h4>
+                        <p>
+                            Create a new UserName & Password. to view all your SLAMBOOK from next time. 
+                        </p>
+                    </div>
+                    <form noValidate autoComplete="off">
+                        <div className="mt-3">
+                            <div className="m-auto col-12">
+                                <TextField
+                                    required
+                                    fullWidth="true"
+                                    id="filled-required"
+                                    label="Username"
+                                    variant="filled"
+                                    type="text"
+                                    className="col-12"
+                                />
+                            </div>
+                        </div>
+                        <div className=" mt-3">
+                            <div className="m-auto col-12">
+                                <TextField
+                                    required
+                                    fullWidth="true"
+                                    id="filled-required"
+                                    label="Password"
+                                    variant="filled"
+                                    type="password"
+                                    className="w-100"
+                                />
+                            </div>
+                        </div>
+                        <div className=" mt-3">
+                            <div className="m-auto col-12">
+                                <Button type="submit" onClick={this.handleSubmit.bind(this)} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
+                                    {
+                                    (loader)
+                                    ?
+                                    <span className="text-center w-100 m-2 p-2">
+                                        Generating
+                                    <LinearProgress color="secondary" /></span>
+                                    :
+                                    <span className="h2">Generate Link</span>
+                                    }
+                                </Button>
+                            </div>
+                        </div>
                     </form>
-
-                    </Dialog>
+                </div>
+                }
+                </Dialog>
             </div>
         );
     }
