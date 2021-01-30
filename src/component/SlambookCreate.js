@@ -161,33 +161,40 @@ class SlambookCreate extends React.Component {
     render() { 
         const { data,disableProceedButton,proceedModal,loader,generatedLink,isCopied } = this.state;
         return (  
-            <div className="container-fluid bg-green"> 
-                <div className="h1 pt-2 pb-2"> Create Your own SlamBook. </div>
-                <FormGroup aria-label="position" row>
-                {
-                    (data)
-                    ?
-                        data.map((d,i)=>{
-                            return(
-                                <div className="row w-100">
-                                    <FormControlLabel
-                                        value={d.id}
-                                        control={<Checkbox color="primary" onClick={this.createNewList.bind(this,d)} />}
-                                        label={d.question}
-                                        labelPlacement="end"
-                                    />
-                                </div>
-                            )
-                        })
-                    :
-                    null
-                }
-                </FormGroup>
-                <Button disabled={disableProceedButton} onClick={this.proceedNext.bind(this)} variant="contained" color="secondary" className="w-100 mt-2 mb-4 p-2">
+            <div className="container-fluid"> 
+                <div className="row">
+                    <div className="col-12 px-0 position-fixed text-center toplabel">
+                        <p className="col-12 mt-2">Create Your own SlamBook</p>
+                    </div>
+                    <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
+                </div>
+                <div className="p-2 mt-5">
+                    <FormGroup aria-label="position" row>
+                    {
+                        (data)
+                        ?
+                            data.map((d,i)=>{
+                                return(
+                                    <div className="row w-100">
+                                        <div className="col-12 px-0">
+                                        <FormControlLabel
+                                            value={d.id}
+                                            control={<Checkbox color="primary" onClick={this.createNewList.bind(this,d)} />}
+                                            label={d.question}
+                                            labelPlacement="end"
+                                        />
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        :
+                        null
+                    }
+                    </FormGroup>
+                    <Button disabled={disableProceedButton} onClick={this.proceedNext.bind(this)} variant="contained" color="secondary" className="w-100 mt-2 mb-4 p-2">
                     <span className="h1">Proceed</span>
                 </Button>
-
-
+                </div>
                 {/* Dialog Start from here */}
                 <Dialog maxWidth="md" onClose={()=>this.setState({proceedModal:false})} aria-labelledby="proceed-to-share" open={proceedModal}>
                 {

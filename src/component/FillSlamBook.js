@@ -102,21 +102,20 @@ class FillSlamBook extends React.Component {
                     <div className="col-12 px-0 position-fixed text-center toplabel">
                         <Button className="col-12">Create Your Own SlamBook Now</Button>
                     </div>
-                    <div className="mainimage position-fixed"></div>
+                    <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
                 </div>
                 <div className="row mt-3 pt-4">
                     <div className="col-12">
                         {this.state.data.map((value, index)=> {
-                            {console.log(this.state)}
                             return (
                                 <div key={index}>
-                                    <div className="row mt-2">
-                                        <div className="col-12 questions">
+                                    <div key={"q_" + index} className="row mt-2">
+                                        <div key={"q_t" + index} className="col-12 questions">
                                             {(index+ 1) + ') ' + value.question}
                                         </div>
                                     </div>
-                                    <div className="row">
-                                        <div className="col-12">
+                                    <div key={"a" + index} className="row">
+                                        <div key={"a_t" + index} className="col-12">
                                             <TextField id={"question"+ value.id} label="Your Answer" data-id={value.id}/>
                                         </div>
                                     </div>
@@ -134,5 +133,5 @@ class FillSlamBook extends React.Component {
         );
     }
 }
- 
+
 export default FillSlamBook;
