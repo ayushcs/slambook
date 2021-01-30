@@ -9,3 +9,16 @@ a {
     background-size: cover;
     background-repeat: no-repeat;
 }
+
+.toplabel {
+    top: 0px;
+    background-color: pink;
+    font-weight: 600;
+    box-shadow: 2px 1px 7px gray;
+    z-index: 6;
+}
+
+.questions {
+  z-index: 5;
+  font-weight: bold;
+}
