@@ -109,7 +109,7 @@ class SlambookCreate extends React.Component {
             disableProceedButton:true,
             proceedModal: false,
             loader:false,
-            generatedLink:"https://demo.com/xyz",
+            generatedLink:false,
             isCopied:false,
             error:null
         }
