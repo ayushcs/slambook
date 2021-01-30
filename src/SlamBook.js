@@ -4,6 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 import SlambookCreate from './component/SlambookCreate';
 import ViewSlamBook  from './component/ViewSlamBook';
 import FrontPage from './component/FrontPage';
+import FillSlamBook from './component/FillSlamBook';
+
 class SlamBook extends React.Component {
     constructor(props) {
         super(props);
@@ -20,6 +22,7 @@ class SlamBook extends React.Component {
                     <Route exact path='/' component={FrontPage} />
                     <Route exact path='/SlambookCreate' component={SlambookCreate} />
                     <Route path='/ViewSlamBook' component={ViewSlamBook} />
+                    <Route exact path="/users/:id" component={FillSlamBook} />
                 </Switch>
             </React.Fragment>
         );
