@@ -11,14 +11,16 @@ class FrontPage extends React.Component {
                     </div>
                     <div className = "position-absolute col-12" style={{top: '40%'}}>
                         <div className="text-center">
-                            <img src={logo} width="150px"/>
+                            <img src={logo} width="150px" alt="Welcome to the Slambook"/>
                         </div>
                         <div className="row mt-3">
-                            <Link className="col-12" to='/SlambookCreate'>
-                                <Button variant="contained" color="primary" className="mb-2 col-12" >Create SlamBook</Button>
+                            <Link className="m-auto col-10 col-sm-4" to='/SlambookCreate'>
+                                <Button variant="contained" color="primary" className="col-12" >Create SlamBook</Button>
                             </Link>
-                            <Link className="col-12" to='/ViewSlamBook'>
-                                <Button variant="contained" color="secondary" className="mt-2 col-12">View SlamBook</Button>
+                        </div>
+                        <div className="row mt-3">
+                            <Link className="m-auto col-10 col-sm-4" to='/ViewSlamBook'>
+                                <Button variant="contained" color="secondary" className="col-12">View SlamBook</Button>
                             </Link>
                         </div>
                     </div>
