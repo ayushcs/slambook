@@ -36,7 +36,10 @@ class FillSlamBook extends React.Component {
     }
 
     setAnswer(e){
-        console.log(e.target.value,e.target.id.replace(/question/g,''))
+        let answers = [];
+        let id = e.target.id.replace(/question/g,'');
+        let value = e.target.value;
+        answers[id] = value;
     }
 
     handleSubmit(e){
@@ -64,31 +67,33 @@ class FillSlamBook extends React.Component {
                     </div>
                 :
                     this.state.data.length > 0 ?  
-                    <div className="row mt-3 pt-4">
-                        <div className="col-12">
-                            {this.state.data.map((value, index)=> {
-                                return (
-                                    <div key={index}>
-                                        <div key={"q_" + index} className="row mt-2">
-                                            <div key={"q_t" + index} className="col-12 questions">
-                                                {(index+ 1) + ') ' + value.question}
+                    <form>
+                        <div className="row mt-3 pt-4">
+                            <div className="col-12">
+                                {this.state.data.map((value, index)=> {
+                                    return (
+                                        <div key={index}>
+                                            <div key={"q_" + index} className="row mt-2">
+                                                <div key={"q_t" + index} className="col-12 questions">
+                                                    {(index+ 1) + ') ' + value.question}
+                                                </div>
+                                            </div>
+                                            <div key={"a" + index} className="row">
+                                                <div key={"a_t" + index} className="col-12">
+                                                    <TextField id={"question"+ value.id} onKeyUp={this.setAnswer.bind(this)} label="Your Answer" data-id={value.id}/>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div key={"a" + index} className="row">
-                                            <div key={"a_t" + index} className="col-12">
-                                                <TextField id={"question"+ value.id} onKeyUp={this.setAnswer.bind(this)} label="Your Answer" data-id={value.id}/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                        <div className="row mt-4 mb-3">
-                            <div className="m-auto col-10 col-sm-4">
-                                <Button onClick={this.handleSubmit.bind(this)} variant="contained" color="secondary" className="col-12">Submit</Button>
+                                    )
+                                })}
                             </div>
-                        </div>
-                    </div> 
+                            <div className="row mt-4 mb-3">
+                                <div className="m-auto col-10 col-sm-4">
+                                    <Button type="submit" onClick={this.handleSubmit.bind(this)} variant="contained" color="secondary" className="col-12">Submit</Button>
+                                </div>
+                            </div>
+                        </div> 
+                    </form>
                     :
                     <div className="row mt-5 m-0 pt-4">
                         <div className="alert alert-danger">No Data found</div>
