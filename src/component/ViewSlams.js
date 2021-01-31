@@ -104,7 +104,7 @@ class ViewSlams extends React.Component {
                         <div className="row m-0 pt-4">
                             <div className="alert alert-primary">You have not recieved the response yet. Share the link for more responses</div>
                             <div className="px-2">
-                                <input type="text" className="form-control" id="shareableLink" readonly={true} value={window.location.origin + "/#/users/id=" + btoa(uid)} />
+                                <input type="text" className="form-control" id="shareableLink" readonly={true} value={window.location.origin + window.location.pathname + "#/users/id=" + btoa(uid)} />
                             </div>
                             <div className="mt-3">
                                 <div className="m-auto col-12">

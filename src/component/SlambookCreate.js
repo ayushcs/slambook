@@ -184,7 +184,7 @@ class SlambookCreate extends React.Component {
                 // response generated
                 this.setState ({
                     loader:false, 
-                    generatedLink: window.location.origin + "/#/users/id=" + btoa(uid)
+                    generatedLink: window.location.origin + window.location.pathname + "#/users/id=" + btoa(uid)
                 })
             })
         } else{

@@ -48,7 +48,7 @@ class ViewForm extends React.Component {
     }
 
     goBack() {
-        window.location.href = window.location.origin +'/#/ViewSlamBook/viewlist/' + this.props.match.params.users;
+        window.location.href = window.location.origin + window.location.pathname +'#/ViewSlamBook/viewlist/' + this.props.match.params.users;
     }
 
     render() { 
