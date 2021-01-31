@@ -114,6 +114,9 @@ class SlambookCreate extends React.Component {
             isCopied:false,
             error:null,
         }
+        // for debugging
+        window.fire = fire;
+
     }
 
     createNewList(d,event){
@@ -147,7 +150,6 @@ class SlambookCreate extends React.Component {
         copyText.setSelectionRange(0, 99999)
         document.execCommand("copy");
         this.setState({isCopied:true})
-        
         setTimeout(()=>{
             this.props.history.push(`/`)
         },1500)  
@@ -156,19 +158,37 @@ class SlambookCreate extends React.Component {
     handleSubmit(event){
         event.preventDefault();
         let error = this.state.error
-        let uName = document.getElementById('uName').value;
-        let pwd = document.getElementById('pwd').value;
-        if(uName && pwd){
+        let username = document.getElementById('uName').value;
+        let password = document.getElementById('pwd').value;
+        if(username && password){
             this.setState({loader:true})
-            fire.database().ref(uName).set({
-                uName,
-                pwd,
-                data:this.state.data
+            let uid = username + '||' + password;
+            let question = this.state.data.filter( (item) => item.added == true );
+
+            // appending new user data to the 
+            fire.database().ref("users").child(uid.toLowerCase()).set({
+                username,
+                password,
+                question,
+            }).then(()=> {
+                // response generated
+                this.setState ({
+                    loader:false, 
+                    generatedLink: window.location.origin + "/#/users/id=" + btoa(uid)
+                })
             })
-            // //DEMO CODE Please remove during production setup
-            // setTimeout(()=>{
-            //     this.setState({loader:false, generatedLink:"https://demo.com/xyz"})
-            // },3000)    
+
+            console.log(window.location.origin + "/#/users/id=" + btoa(uid))
+
+            /*
+                FUNCTION FOR GETTING THE DATA FROM THE FIREBASE
+                
+                fire.database().ref('user').once('value').then((snapshot)=> {
+                    snapshot.forEach((item)=> {
+                        console.log(item.val())
+                    })
+                })
+            */  
         }else{
             error = "Please create a UserName/Password";
             this.setState({error})
