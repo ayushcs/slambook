@@ -25,15 +25,30 @@ class ViewSlamBook extends React.Component {
             this.setState({error: "Username and Password can't be blank."})
         } else {
             let uid = uName.toLowerCase() + '||' + pwd;
-            fire.database().ref('users/'+ uid).once('value', (snapshot) => {
-                if (snapshot.val()) {
+            
+            fire.database().ref(`users/${uid}`).get().then((response)=> {
+                if(response.val()){
                     window.localStorage.setItem('SLAM_ACCESS_TOKEN', btoa(uid));
                     let path = '/ViewSlamBook/viewlist/users=' + btoa(uid);
                     this.props.history.push(path);
-                } else {
+                }else{
                     this.setState({error: "Username or Password is wrong."})
                 }
-            });
+            }).catch((err)=>{
+                this.setState({error: "Username or Password is wrong."})
+            })
+            
+            
+            
+            // fire.database().ref('users/'+ uid).once('value', (snapshot) => {
+            //     if (snapshot.val()) {
+            //         window.localStorage.setItem('SLAM_ACCESS_TOKEN', btoa(uid));
+            //         let path = '/ViewSlamBook/viewlist/users=' + btoa(uid);
+            //         this.props.history.push(path);
+            //     } else {
+            //         this.setState({error: "Username or Password is wrong."})
+            //     }
+            // });
         }
     }
 
@@ -55,7 +70,7 @@ class ViewSlamBook extends React.Component {
                 <div className="row">
                     <div style={{opacity: "0.5"}} className= "position-fixed mainimage"></div>
                     {(error) ?
-                        <div class="alert px-2 alert-danger alert-dismissible fade show" role="alert">
+                        <div className="alert px-2 alert-danger alert-dismissible fade show" role="alert">
                             <span>{error}</span>
                         </div>
                     : null}
