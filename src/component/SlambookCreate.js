@@ -1,4 +1,5 @@
 import React from 'react';
+import fire from '../config/fire';
 import {TextField, Dialog,LinearProgress, Button,FormGroup,FormControlLabel,Checkbox }from '@material-ui/core/';
 class SlambookCreate extends React.Component {
     constructor(props) {
@@ -111,7 +112,7 @@ class SlambookCreate extends React.Component {
             loader:false,
             generatedLink:false,
             isCopied:false,
-            error:null
+            error:null,
         }
     }
 
@@ -159,10 +160,15 @@ class SlambookCreate extends React.Component {
         let pwd = document.getElementById('pwd').value;
         if(uName && pwd){
             this.setState({loader:true})
-            //DEMO CODE Please remove during production setup
-            setTimeout(()=>{
-                this.setState({loader:false, generatedLink:"https://demo.com/xyz"})
-            },3000)    
+            fire.database().ref(uName).set({
+                uName,
+                pwd,
+                data:this.state.data
+            })
+            // //DEMO CODE Please remove during production setup
+            // setTimeout(()=>{
+            //     this.setState({loader:false, generatedLink:"https://demo.com/xyz"})
+            // },3000)    
         }else{
             error = "Please create a UserName/Password";
             this.setState({error})
@@ -186,7 +192,7 @@ class SlambookCreate extends React.Component {
                         ?
                             data.map((d,i)=>{
                                 return(
-                                    <div className="row w-100">
+                                    <div key={`q${i}`} className="row w-100">
                                         <div className="col-12 px-0">
                                         <FormControlLabel
                                             value={d.id}
@@ -211,8 +217,8 @@ class SlambookCreate extends React.Component {
                 {
                 (generatedLink)?
                 <div className="row m-auto">
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Hurrey! Link Generated</h4>
+                    <div className="alert alert-success" role="alert">
+                        <h4 className="alert-heading">Hurrey! Link Generated</h4>
                         <p>
                             Click on Copy and share with your colleagues.
                         </p>
@@ -236,8 +242,8 @@ class SlambookCreate extends React.Component {
                 </div>
                 :
                 <div className="row m-auto">
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Final Step</h4>
+                    <div className="alert alert-success" role="alert">
+                        <h4 className="alert-heading">Final Step</h4>
                         <p>
                             Create a new UserName & Password. to view all your SLAMBOOK from next time. 
                         </p>

@@ -1,12 +1,24 @@
 import React from 'react';
 import {TextField, Button} from '@material-ui/core/';
-import logo from '../image/main_logo.png'
+import logo from '../image/main_logo.png';
+import fire from '../config/fire';
 class ViewSlamBook extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {  }
+        this.state = { 
+            error:null,
+         }
     }
+
+    login(e){
+        let uName = document.getElementById('uName').value;
+        let pwd = document.getElementById('pwd').value;
+
+        e.preventDefault();
+    }
+
     render() { 
+        const {error} = this.state;
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -20,7 +32,7 @@ class ViewSlamBook extends React.Component {
                             <div className="m-auto col-10 col-sm-4">
                                 <TextField
                                     required
-                                    id="filled-required"
+                                    id="uName"
                                     label="Username"
                                     variant="filled"
                                     type="text"
@@ -32,7 +44,7 @@ class ViewSlamBook extends React.Component {
                             <div className="m-auto col-10 col-sm-4">
                                 <TextField
                                     required
-                                    id="filled-required"
+                                    id="pwd"
                                     label="Password"
                                     variant="filled"
                                     type="password"
@@ -40,9 +52,10 @@ class ViewSlamBook extends React.Component {
                                 />
                             </div>
                         </div>
+                        {(error)?<span className="row m-auto col-10 mt-3 text-danger">{error}</span>:null}
                         <div className="row mt-3">
                             <div className="m-auto col-10 col-sm-4">
-                                <Button variant="contained" color="secondary" className="col-12">Login</Button>
+                                <Button onClick={this.login.bind(this)} variant="contained" color="secondary" className="col-12">Login</Button>
                             </div>
                         </div>
                     </div>
