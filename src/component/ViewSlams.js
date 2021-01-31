@@ -39,6 +39,8 @@ class ViewSlams extends React.Component {
                                     data[index] = {name : names[index]['answer']['shownName'], key: response[index]};
                                 }
                                 this.setState({data: data, loader: false, uid});
+                            }else{
+                                this.setState({data: [],loader:false,uid});
                             }
                         });
                     } else {

@@ -1,6 +1,6 @@
 import React from 'react'
 import {TextField, Button} from '@material-ui/core/';
-
+import fire from '../config/fire'
 
 class ViewForm extends React.Component {
     constructor(props) {
@@ -33,6 +33,39 @@ class ViewForm extends React.Component {
                 }
             ],
             curData:'someUniqueId'
+        }
+    }
+
+    componentWillMount(){
+        try {
+            console.log(this.props.match.params)
+            if (this.props.match.params) {
+                let users = atob(this.props.match.params.users.replace(/users=/,''));
+                let formID = this.props.match.params.formid.replace(/formid=/,'');
+                console.log({users,formID});
+                let data = [];
+                if (users && formID) {
+                    fire.database().ref(`answers/${users}/${formID}/answer`).get().then((snapshot) => {
+                        if (snapshot.val()) {
+                            let response = snapshot.val();
+                            data.push(response)
+                        }
+                    });
+                    fire.database().ref(`users/${users}/question`).get().then((snapshot) => {
+                        if (snapshot.val()) {
+                            let response = snapshot.val();
+                            data.push(response)
+                        }
+                    });
+                    console.log({data})
+                }else{
+                    this.setState({data: [],loader:false});
+                }
+            }else{
+                this.setState({data: [],loader:false});
+            } 
+        } catch (e) {
+            this.setState({data: [],loader:false});
         }
     }
 
