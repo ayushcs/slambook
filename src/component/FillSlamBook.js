@@ -8,6 +8,7 @@ class FillSlamBook extends React.Component {
         this.state = {
             data : [],
             loader: true,
+            uid: ""
         }
     }
 
@@ -20,7 +21,7 @@ class FillSlamBook extends React.Component {
                     fire.database().ref('users/'+ uid).once('value', (snapshot) => {
                         if (snapshot.val()) {
                             let response = snapshot.val();
-                            this.setState({data: response.question,loader:false});
+                            this.setState({data: response.question,loader:false,uid});
                         }
                     });
                 }else{
@@ -32,6 +33,19 @@ class FillSlamBook extends React.Component {
         } catch (e) {
             this.setState({data: [],loader:false});
         }
+    }
+
+    setAnswer(e){
+        console.log(e.target.value,e.target.id.replace(/question/g,''))
+    }
+
+    handleSubmit(e){
+        e.preventDefault();
+        // fire.database().ref(`users/${this.state.uid}`).update({
+        //     answer:
+        // }).then(()=> {
+        //     // response generated
+        // })
     }
 
     render() { 
@@ -62,7 +76,7 @@ class FillSlamBook extends React.Component {
                                         </div>
                                         <div key={"a" + index} className="row">
                                             <div key={"a_t" + index} className="col-12">
-                                                <TextField id={"question"+ value.id} label="Your Answer" data-id={value.id}/>
+                                                <TextField id={"question"+ value.id} onKeyUp={this.setAnswer.bind(this)} label="Your Answer" data-id={value.id}/>
                                             </div>
                                         </div>
                                     </div>
@@ -71,7 +85,7 @@ class FillSlamBook extends React.Component {
                         </div>
                         <div className="row mt-4 mb-3">
                             <div className="m-auto col-10 col-sm-4">
-                                <Button variant="contained" color="secondary" className="col-12">Submit</Button>
+                                <Button onClick={this.handleSubmit.bind(this)} variant="contained" color="secondary" className="col-12">Submit</Button>
                             </div>
                         </div>
                     </div> 
