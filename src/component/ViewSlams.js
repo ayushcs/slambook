@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import {Button} from '@material-ui/core/';
 
 
 class ViewSlams extends React.Component {
@@ -16,33 +17,52 @@ class ViewSlams extends React.Component {
         }
     }
 
-    componentDidMount() {
-        console.log(this.props.match);
+    componentWillMount() {
+        if (window.localStorage.getItem('SLAM_ACCESS_TOKEN') == null) {
+            this.props.history.push('/ViewSlamBook/');
+        }
+        // let totallist;
+        // fire.database().ref('users').on('value', (snapshot) => {
+        //     totallist = snapshot.val();
+        // });
+    }
+
+    logout() {
+        window.localStorage.removeItem('SLAM_ACCESS_TOKEN')
+        this.props.history.push('/ViewSlamBook/');
     }
 
     render() { 
         return ( 
-            <div className="table-responsive mt-2 p-1">
-                <table className="table table-hover table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>S.no.</th>
-                            <th>Person</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.totalusers.map ((value, index)=> {
-                            return (
-                                
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td><Link to={this.props.match.url + "/formid=" + value.form_id}>{value.users} </Link></td>
+            <div className="container-fluid">
+                <div className="row">
+                    <div style={{opacity: "0.2"}} className= "position-fixed mainimage"></div>
+                    <div className="col-12 px-0 position-fixed text-center toplabel">
+                        <Button className="col-12" onClick={this.logout.bind(this)}>Logout</Button>
+                    </div>
+                    <div className="table-responsive mt-5 p-1">
+                        <table className="table table-hover table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>S.no.</th>
+                                    <th>Person</th>
                                 </tr>
-                                
-                            )
-                        })}
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody>
+                                {this.state.totalusers.map ((value, index)=> {
+                                    return (
+                                        
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td><Link to={this.props.match.url + "/formid=" + value.form_id}>{value.users} </Link></td>
+                                        </tr>
+                                        
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         );
     }
