@@ -37,7 +37,7 @@ class ViewSlams extends React.Component {
                                 for (let index = 0; index < names.length; index++) {
                                     data[index] = {name : names[index]['answer']['shownName'], key: response[index]};
                                 }
-                                this.setState({data: [], loader: false});
+                                this.setState({data: data, loader: false});
                             }
                         });
                     } else {
@@ -96,8 +96,8 @@ class ViewSlams extends React.Component {
                             </tbody>
                         </table>
                         : 
-                        <div className="row mt-5 m-0 pt-4">
-                            <div className="alert alert-danger">No Data found</div>
+                        <div className="row m-0 pt-4">
+                            <div className="alert alert-primary">You have not recieved the response yet.</div>
                         </div>
                     }
                     </div>
