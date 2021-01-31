@@ -2,13 +2,15 @@ import React from 'react'
 import {TextField, Button, CircularProgress} from '@material-ui/core/';
 import fire from '../config/fire'
 
+
 class FillSlamBook extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             data : [],
             loader: true,
-            uid: ""
+            uid: "",
+            answers: {}
         }
     }
 
@@ -36,19 +38,18 @@ class FillSlamBook extends React.Component {
     }
 
     setAnswer(e){
-        let answers = [];
-        let id = e.target.id.replace(/question/g,'');
-        let value = e.target.value;
-        answers[id] = value;
+        let answers = this.state.answers;
+        answers[e.target.name.replace(/ques_/g, '')] = e.target.value.trim();
+        this.setState({answers})
     }
 
     handleSubmit(e){
         e.preventDefault();
-        // fire.database().ref(`users/${this.state.uid}`).update({
-        //     answer:
-        // }).then(()=> {
-        //     // response generated
-        // })
+        fire.database().ref(`users/${this.state.uid}`).update({
+            answer: this.state.answers
+        }).then(()=> {
+            // response generated
+        })
     }
 
     render() { 
@@ -80,7 +81,7 @@ class FillSlamBook extends React.Component {
                                             </div>
                                             <div key={"a" + index} className="row">
                                                 <div key={"a_t" + index} className="col-12">
-                                                    <TextField id={"question"+ value.id} onKeyUp={this.setAnswer.bind(this)} label="Your Answer" data-id={value.id}/>
+                                                    <TextField name={"ques_"+ value.id} id={"question"+ value.id} onChange={this.setAnswer.bind(this)} label="Your Answer" data-id={value.id}/>
                                                 </div>
                                             </div>
                                         </div>
