@@ -119,6 +119,12 @@ class SlambookCreate extends React.Component {
 
     }
 
+    componentDidMount(){
+        fire.database().ref("users/nihal||123").get().then((response)=> {
+            console.log(response.val())
+        })
+    }
+
     createNewList(d,event){
         let arr = this.state.data;
         let pos = parseInt(event.target.value);

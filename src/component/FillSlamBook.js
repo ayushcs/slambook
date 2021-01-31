@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextField, Button, CircularProgress} from '@material-ui/core/';
+import {TextField, Button, CircularProgress,Dialog} from '@material-ui/core/';
 import fire from '../config/fire'
 
 
@@ -10,7 +10,8 @@ class FillSlamBook extends React.Component {
             data : [],
             loader: true,
             uid: "",
-            answers: {}
+            answers: {},
+            submitModal:false
         }
     }
 
@@ -43,17 +44,24 @@ class FillSlamBook extends React.Component {
         this.setState({answers})
     }
 
+    submitModal(e){
+        e.preventDefault()
+        this.setState({submitModal:true})
+    }
+
     handleSubmit(e){
         e.preventDefault();
-        fire.database().ref(`users/${this.state.uid}`).update({
+        fire.database().ref(`answers/${this.state.uid}/`).push({
             answer: this.state.answers
         }).then(()=> {
-            // response generated
+            alert("Submitted")
+            this.setState({submitModal:false})
+            this.props.history.push('/')
         })
     }
 
     render() { 
-        const {loader} = this.state;
+        const {loader,submitModal} = this.state;
         return ( 
             <div className="container-fluid">
                 <div className="row">
@@ -90,7 +98,7 @@ class FillSlamBook extends React.Component {
                             </div>
                             <div className="row mt-4 mb-3">
                                 <div className="m-auto col-10 col-sm-4">
-                                    <Button type="submit" onClick={this.handleSubmit.bind(this)} variant="contained" color="secondary" className="col-12">Submit</Button>
+                                    <Button type="submit" onClick={this.submitModal.bind(this)} variant="contained" color="secondary" className="col-12">Submit</Button>
                                 </div>
                             </div>
                         </div> 
@@ -100,6 +108,25 @@ class FillSlamBook extends React.Component {
                         <div className="alert alert-danger">No Data found</div>
                     </div>
                 }
+                <Dialog maxWidth="md" onClose={()=> this.setState({submitModal:false})} aria-labelledby="proceed-to-share" open={submitModal}>
+                    <div className="row m-auto">
+                        <div className="alert alert-success" role="alert">
+                            <p>
+                                Enter Your Name, Which you want to shown...
+                            </p>
+                        </div>
+                        <div className="px-2">
+                            <input type="text" name="shownName" className="form-control" onBlur={this.setAnswer.bind(this)}  />
+                        </div>
+                        <div className=" mt-3">
+                            <div className="m-auto col-12">
+                                <Button onClick={this.handleSubmit.bind(this)} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
+                                    Submit
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </Dialog>
             </div>
         );
     }

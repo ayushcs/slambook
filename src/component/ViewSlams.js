@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import {Button} from '@material-ui/core/';
+import fire from '../config/fire';
 
 
 class ViewSlams extends React.Component {
@@ -14,12 +15,34 @@ class ViewSlams extends React.Component {
                 users: 'Nihal',
                 form_id: 'someUniqueId2',
             }],
+            data:[],
         }
     }
 
     componentWillMount() {
         if (window.localStorage.getItem('SLAM_ACCESS_TOKEN') == null) {
             this.props.history.push('/ViewSlamBook/');
+        }else{
+            try {
+                if (this.props.match.params && this.props.match.params.users) {
+                    let id = this.props.match.params.users.replace(/users=/,'')
+                    console.log(id)
+                    if (id) {
+                        let uid = atob(id);
+                        fire.database().ref(`users/${uid}`).get().then((res)=>{
+                            if (res.val()) {
+                                this.setState({data: res.val()});
+                            }
+                        });
+                    }else{
+                        this.setState({data: [],loader:false});
+                    }
+                }else{
+                    this.setState({data: [],loader:false});
+                } 
+            } catch (e) {
+                this.setState({data: [],loader:false});
+            }
         }
         // let totallist;
         // fire.database().ref('users').on('value', (snapshot) => {
@@ -33,6 +56,8 @@ class ViewSlams extends React.Component {
     }
 
     render() { 
+        const {data} = this.state;
+        console.log({3333:data, 2:typeof data})
         return ( 
             <div className="container-fluid">
                 <div className="row">
@@ -49,16 +74,12 @@ class ViewSlams extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.totalusers.map ((value, index)=> {
-                                    return (
-                                        
-                                        <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td><Link to={this.props.match.url + "/formid=" + value.form_id}>{value.users} </Link></td>
-                                        </tr>
-                                        
-                                    )
-                                })}
+                                {
+                                (data.length) ? data.map((d,i) => {
+                                    console.log({d})
+                                })
+                                :null
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -69,3 +90,15 @@ class ViewSlams extends React.Component {
 }
  
 export default ViewSlams;
+
+
+
+// {console.log(d)}
+                                    // return (
+                                        
+                                    //     <tr key={index}>
+                                    //         <td>{index + 1}</td>
+                                    //         <td><Link to={this.props.match.url + "/formid=" + value.form_id}>{value.users} </Link></td>
+                                    //     </tr>
+                                        
+                                    // )
