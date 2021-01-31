@@ -8,13 +8,6 @@ class ViewSlams extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            totalusers : [{
-                users: 'Ayush',
-                form_id: 'someUniqueId',
-            }, {
-                users: 'Nihal',
-                form_id: 'someUniqueId2',
-            }],
             data:[],
             uid: '',
             loader: true,

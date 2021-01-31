@@ -1,38 +1,13 @@
 import React from 'react'
-import {TextField, Button} from '@material-ui/core/';
+import {TextField, Button, CircularProgress} from '@material-ui/core/';
 import fire from '../config/fire'
 
 class ViewForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data : [
-                {
-                    'someUniqueId' : [{
-                        id: 0,
-                        question: "My name in your phone_______ ?",
-                        answer: 'Ayush'
-                    },
-                    {
-                        id: 1,
-                        question: "My name in your phone_______ ?",
-                        answer: 'Aking'
-                    }]
-                },
-                {
-                    'someUniqueId2' : [{
-                        id: 0,
-                        question: "My name in your phone_______ ?",
-                        answer: 'Nihal'
-                    },
-                    {
-                        id: 1,
-                        question: "My name in your phone_______ ?",
-                        answer: 'Abhishek'
-                    }]
-                }
-            ],
-            curData:'someUniqueId'
+            data : [],
+            loader: true
         }
     }
 
@@ -42,23 +17,26 @@ class ViewForm extends React.Component {
             if (this.props.match.params) {
                 let users = atob(this.props.match.params.users.replace(/users=/,''));
                 let formID = this.props.match.params.formid.replace(/formid=/,'');
-                console.log({users,formID});
                 let data = [];
+                let answers = [];
                 if (users && formID) {
                     fire.database().ref(`answers/${users}/${formID}/answer`).get().then((snapshot) => {
                         if (snapshot.val()) {
-                            let response = snapshot.val();
-                            data.push(response)
+                            answers = snapshot.val();
                         }
                     });
                     fire.database().ref(`users/${users}/question`).get().then((snapshot) => {
                         if (snapshot.val()) {
                             let response = snapshot.val();
-                            data.push(response)
+                            
+                            for (let index = 0; index < response.length; index++) {
+                                response[index]['answers'] = answers[response[index]['id']] ? answers[response[index]['id']] : 'Not Filled';
+                            }
+                            data = [...response];
+                            this.setState({data: data,loader:false});
                         }
                     });
-                    console.log({data})
-                }else{
+                } else{
                     this.setState({data: [],loader:false});
                 }
             }else{
@@ -69,60 +47,59 @@ class ViewForm extends React.Component {
         }
     }
 
-    componentDidMount() {
-        try {
-            let curData;
-            if (this.props.match.params.formid) {
-                curData = this.props.match.params.formid.split('=')[1];
-                this.setState({curData: curData});
-            }
-        } catch (e) {
-
-        }
+    goBack() {
+        window.location.href = window.location.origin +'/#/ViewSlamBook/viewlist/' + this.props.match.params.users;
     }
 
     render() { 
+        const {loader, data} = this.state;
         return ( 
-            
             <div className="container-fluid">
-                {this.state.curData != '' ?
-                    <div>
-                        <div className="row">
-                            <div className="col-12 px-0 position-fixed text-center toplabel">
-                                <Button className="col-12">Create Your Own SlamBook Now</Button>
-                            </div>
-                            <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
-                        </div>
+                <div className="row">
+                    <div className="col-12 px-0 position-fixed text-center toplabel">
+                        <Button className="col-12">Create Your Own SlamBook Now</Button>
+                    </div>
+                    <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
+                </div>
+                {(loader)?
+                    <div className="m-auto text-center position-absolute" style={{top:"calc(50% - 1em)", left: '40%'}}>
+                        <CircularProgress size={100} className="text-center" color="secondary" />
+                    </div>
+                :
+                    data.length > 0 ?  
                         <div className="row mt-3 pt-4">
                             <div className="col-12">
-                                {/* {this.state.data.map((value, index) => {
-                                        return (
-                                            <div key={index}>
-                                                <div key={"q_" + index} className="row mt-2">
-                                                    <div key={"q_t" + index} className="col-12 questions">
-                                                        {(index+ 1) + ') ' + value[this.state.curData].question}
-                                                    </div>
-                                                </div>
-                                                <div key={"a" + index} className="row">
-                                                    <div key={"a_t" + index} className="col-12">
-                                                        <TextField id={"question"+ value[this.state.curData].id} label="Your Answer" data-id={value[this.state.curData].id}/>
-                                                    </div>
+                                {data.map((value, index)=> {
+                                    return (
+                                        <div key={index}>
+                                            <div key={"q_" + index} className="row mt-2">
+                                                <div key={"q_t" + index} className="col-12 questions">
+                                                    {(index+ 1) + ') ' + value.question}
                                                 </div>
                                             </div>
-                                        )
-                                })} */}
+                                            <div key={"a" + index} className="row">
+                                                <div key={"a_t" + index} className="col-12">
+                                                    <TextField InputProps={{readOnly: true}} name={"ques_"+ value.id} id={"question"+ value.id} defaultValue={value.answers} label="Your Answer"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
                             </div>
                             <div className="row mt-4 mb-3">
                                 <div className="m-auto col-10 col-sm-4">
-                                    <Button variant="contained" color="secondary" className="col-12">Submit</Button>
+                                    <Button variant="contained" onClick={this.goBack.bind(this)}color="secondary" className="col-12">Go Back</Button>
                                 </div>
                             </div>
-                        </div>
+                        </div> 
+                    :
+                    <div className="row mt-5 m-0 pt-4">
+                        <div className="alert alert-danger">There is some issue, Data not found!</div>
                     </div>
-                : null}
+                }
             </div>
         );
     }
 }
- 
+
 export default ViewForm;
