@@ -45,7 +45,7 @@ class FillSlamBook extends React.Component {
                     <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
                 </div>
                 {(loader)?
-                    <div className="m-auto text-center position-absolute" style={{top:"calc(50% - 1em)"}}>
+                    <div className="m-auto text-center position-absolute" style={{top:"calc(50% - 1em)", left: '40%'}}>
                         <CircularProgress size={100} className="text-center" color="secondary" />
                     </div>
                 :
