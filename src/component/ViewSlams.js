@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import {Button} from '@material-ui/core/';
+import {Button, CircularProgress} from '@material-ui/core/';
 import fire from '../config/fire';
 
 
@@ -16,28 +16,34 @@ class ViewSlams extends React.Component {
                 form_id: 'someUniqueId2',
             }],
             data:[],
+            loader: true,
         }
     }
 
     componentWillMount() {
         if (window.localStorage.getItem('SLAM_ACCESS_TOKEN') == null) {
             this.props.history.push('/ViewSlamBook/');
-        }else{
+        } else{
             try {
                 if (this.props.match.params && this.props.match.params.users) {
                     let id = this.props.match.params.users.replace(/users=/,'')
-                    console.log(id)
                     if (id) {
                         let uid = atob(id);
-                        fire.database().ref(`users/${uid}`).get().then((res)=>{
+                        fire.database().ref(`answers/${uid}`).get().then((res)=>{
                             if (res.val()) {
-                                this.setState({data: res.val()});
+                                let response = Object.keys(res.val());
+                                let names = Object.values(res.val());
+                                let data = [];
+                                for (let index = 0; index < names.length; index++) {
+                                    data[index] = {name : names[index]['answer']['shownName'], key: response[index]};
+                                }
+                                this.setState({data: [], loader: false});
                             }
                         });
-                    }else{
+                    } else {
                         this.setState({data: [],loader:false});
                     }
-                }else{
+                } else{
                     this.setState({data: [],loader:false});
                 } 
             } catch (e) {
@@ -56,16 +62,21 @@ class ViewSlams extends React.Component {
     }
 
     render() { 
-        const {data} = this.state;
-        console.log({3333:data, 2:typeof data})
+        const {data, loader} = this.state;
         return ( 
             <div className="container-fluid">
                 <div className="row">
-                    <div style={{opacity: "0.2"}} className= "position-fixed mainimage"></div>
+                    <div style={{opacity: "0.2", zIndex: "-1"}} className= "position-fixed mainimage"></div>
                     <div className="col-12 px-0 position-fixed text-center toplabel">
                         <Button className="col-12" onClick={this.logout.bind(this)}>Logout</Button>
                     </div>
                     <div className="table-responsive mt-5 p-1">
+                    {(loader)?
+                            <div className="m-auto text-center position-absolute" style={{top:"calc(50% - 1em)", left: '40%'}}>
+                                <CircularProgress size={100} className="text-center" color="secondary" />
+                            </div>
+                        :
+                        data.length > 0 ?
                         <table className="table table-hover table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -74,14 +85,21 @@ class ViewSlams extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {
-                                (data.length) ? data.map((d,i) => {
-                                    console.log({d})
-                                })
-                                :null
-                                }
+                                {data.map((value, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td className="text-capitalize"><Link to={this.props.match.url + "/formid=" + value.key}>{value.name} </Link></td>
+                                        </tr>
+                                    )
+                                })}
                             </tbody>
                         </table>
+                        : 
+                        <div className="row mt-5 m-0 pt-4">
+                            <div className="alert alert-danger">No Data found</div>
+                        </div>
+                    }
                     </div>
                 </div>
             </div>
@@ -90,15 +108,4 @@ class ViewSlams extends React.Component {
 }
  
 export default ViewSlams;
-
-
-
-// {console.log(d)}
-                                    // return (
-                                        
-                                    //     <tr key={index}>
-                                    //         <td>{index + 1}</td>
-                                    //         <td><Link to={this.props.match.url + "/formid=" + value.form_id}>{value.users} </Link></td>
-                                    //     </tr>
-                                        
-                                    // )
+                                    
