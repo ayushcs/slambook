@@ -34,6 +34,8 @@ class ViewForm extends React.Component {
                             }
                             data = [...response];
                             this.setState({data: data,loader:false});
+                        } else {
+                            this.setState({data: [],loader:false});
                         }
                     });
                 } else{

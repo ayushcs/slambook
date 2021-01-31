@@ -20,16 +20,18 @@ class FillSlamBook extends React.Component {
     componentWillMount() {
         try {
             if (this.props.match.params && this.props.match.params.id) {
-                let id = this.props.match.params.id.split('=')
-                if (id[1]) {
-                    let uid = atob(id[1]);
+                let id = this.props.match.params.id.replace(/id=/,  '');
+                if (id) {
+                    let uid = atob(id);
                     fire.database().ref('users/'+ uid).once('value', (snapshot) => {
                         if (snapshot.val()) {
                             let response = snapshot.val();
                             this.setState({data: response.question,loader:false,uid});
+                        } else {
+                            this.setState({data: [],loader:false});
                         }
                     });
-                }else{
+                } else{
                     this.setState({data: [],loader:false});
                 }
             }else{
@@ -71,7 +73,7 @@ class FillSlamBook extends React.Component {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12 px-0 position-fixed text-center toplabel">
-                        <Button className="col-12">Create Your Own SlamBook Now</Button>
+                        <Button onClick={()=>{this.props.history.push('/SlambookCreate')}} className="col-12">Create Your Own SlamBook Now</Button>
                     </div>
                     <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
                 </div>
