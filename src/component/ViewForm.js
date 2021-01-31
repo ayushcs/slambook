@@ -57,7 +57,7 @@ class ViewForm extends React.Component {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12 px-0 position-fixed text-center toplabel">
-                        <Button className="col-12">Create Your Own SlamBook Now</Button>
+                        <Button className="col-12">Answers Filled By the person</Button>
                     </div>
                     <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
                 </div>
