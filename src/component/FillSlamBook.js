@@ -1,12 +1,13 @@
 import React from 'react'
-import {TextField, Button} from '@material-ui/core/';
+import {TextField, Button, CircularProgress} from '@material-ui/core/';
 import fire from '../config/fire'
 
 class FillSlamBook extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data : []
+            data : [],
+            loader: true,
         }
     }
 
@@ -19,17 +20,22 @@ class FillSlamBook extends React.Component {
                     fire.database().ref('users/'+ uid).once('value', (snapshot) => {
                         if (snapshot.val()) {
                             let response = snapshot.val();
-                            this.setState({data: response.question});
+                            this.setState({data: response.question,loader:false});
                         }
                     });
+                }else{
+                    this.setState({data: [],loader:false});
                 }
+            }else{
+                this.setState({data: [],loader:false});
             } 
         } catch (e) {
-            this.setState({data: []});
+            this.setState({data: [],loader:false});
         }
     }
 
     render() { 
+        const {loader} = this.state;
         return ( 
             <div className="container-fluid">
                 <div className="row">
@@ -38,8 +44,12 @@ class FillSlamBook extends React.Component {
                     </div>
                     <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
                 </div>
-                
-                {this.state.data.length > 0 ?  
+                {(loader)?
+                    <div className="m-auto text-center position-absolute" style={{top:"calc(50% - 1em)"}}>
+                        <CircularProgress size={100} className="text-center" color="secondary" />
+                    </div>
+                :
+                    this.state.data.length > 0 ?  
                     <div className="row mt-3 pt-4">
                         <div className="col-12">
                             {this.state.data.map((value, index)=> {
