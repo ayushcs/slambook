@@ -16,6 +16,7 @@ class ViewSlams extends React.Component {
                 form_id: 'someUniqueId2',
             }],
             data:[],
+            uid: '',
             loader: true,
         }
     }
@@ -37,7 +38,7 @@ class ViewSlams extends React.Component {
                                 for (let index = 0; index < names.length; index++) {
                                     data[index] = {name : names[index]['answer']['shownName'], key: response[index]};
                                 }
-                                this.setState({data: data, loader: false});
+                                this.setState({data: data, loader: false, uid});
                             }
                         });
                     } else {
@@ -56,13 +57,22 @@ class ViewSlams extends React.Component {
         // });
     }
 
+    copyLink(event){
+        event.preventDefault();
+        var copyText = document.getElementById("shareableLink");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999)
+        document.execCommand("copy");
+        this.setState({isCopied:true})
+    }
+    
     logout() {
         window.localStorage.removeItem('SLAM_ACCESS_TOKEN')
         this.props.history.push('/ViewSlamBook/');
     }
 
     render() { 
-        const {data, loader} = this.state;
+        const {data, loader, isCopied, uid} = this.state;
         return ( 
             <div className="container-fluid">
                 <div className="row">
@@ -97,7 +107,17 @@ class ViewSlams extends React.Component {
                         </table>
                         : 
                         <div className="row m-0 pt-4">
-                            <div className="alert alert-primary">You have not recieved the response yet.</div>
+                            <div className="alert alert-primary">You have not recieved the response yet. Share the link for more responses</div>
+                            <div className="px-2">
+                                <input type="text" className="form-control" id="shareableLink" readonly={true} value={window.location.origin + "/#/users/id=" + btoa(uid)} />
+                            </div>
+                            <div className="mt-3">
+                                <div className="m-auto col-12">
+                                    <Button onClick={this.copyLink.bind(this)} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
+                                        <span>{(isCopied) ? "Link Copied": "Copy Link"}</span>
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                     }
                     </div>
