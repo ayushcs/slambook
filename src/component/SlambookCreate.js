@@ -1,4 +1,5 @@
 import React from 'react';
+import fire from '../config/fire';
 import {TextField, Dialog,LinearProgress, Button,FormGroup,FormControlLabel,Checkbox }from '@material-ui/core/';
 class SlambookCreate extends React.Component {
     constructor(props) {
@@ -12,7 +13,7 @@ class SlambookCreate extends React.Component {
                 },
                 {
                     id: 1,
-                    question: "My name in your phone_______ ?",
+                    question: "You Love me just like a_______ ?",
                     added:false
                 },
                 {
@@ -111,8 +112,17 @@ class SlambookCreate extends React.Component {
             loader:false,
             generatedLink:false,
             isCopied:false,
-            error:null
+            error:null,
         }
+        // for debugging
+        window.fire = fire;
+
+    }
+
+    componentDidMount(){
+        fire.database().ref("users/nihal||123").get().then((response)=> {
+            console.log(response.val())
+        })
     }
 
     createNewList(d,event){
@@ -146,24 +156,38 @@ class SlambookCreate extends React.Component {
         copyText.setSelectionRange(0, 99999)
         document.execCommand("copy");
         this.setState({isCopied:true})
-        
-        setTimeout(()=>{
-            this.props.history.push(`/`)
-        },1500)  
+    }
+
+    handleClose() {
+        if (this.state.isCopied) {
+            this.props.history.push(`/`);
+        } else {
+            this.setState({proceedModal:false,generatedLink:false})
+        }
     }
 
     handleSubmit(event){
         event.preventDefault();
         let error = this.state.error
-        let uName = document.getElementById('uName').value;
-        let pwd = document.getElementById('pwd').value;
-        if(uName && pwd){
+        let username = document.getElementById('uName').value;
+        let password = document.getElementById('pwd').value;
+        if(username && password){
             this.setState({loader:true})
-            //DEMO CODE Please remove during production setup
-            setTimeout(()=>{
-                this.setState({loader:false, generatedLink:"https://demo.com/xyz"})
-            },3000)    
-        }else{
+            let uid = username.toLowerCase() + '||' + password;
+            let question = this.state.data.filter( (item) => item.added == true );
+            // appending new user data to the 
+            fire.database().ref("users").child(uid).set({
+                username,
+                password,
+                question,
+            }).then(()=> {
+                // response generated
+                this.setState ({
+                    loader:false, 
+                    generatedLink: window.location.origin + "/#/users/id=" + btoa(uid)
+                })
+            })
+        } else{
             error = "Please create a UserName/Password";
             this.setState({error})
         }
@@ -175,18 +199,18 @@ class SlambookCreate extends React.Component {
             <div className="container-fluid"> 
                 <div className="row">
                     <div className="col-12 px-0 position-fixed text-center toplabel">
-                        <p className="col-12 mt-2">Create Your own SlamBook</p>
+                        <p className="col-12 mt-2">Select the question and Press submit to share with your friends.</p>
                     </div>
                     <div className="mainimage position-fixed" style={{opacity: "0.2",zIndex:"-1"}}></div>
                 </div>
-                <div className="p-2 mt-5">
+                <div className="p-2 pt-4 mt-5">
                     <FormGroup aria-label="position" row>
                     {
                         (data)
                         ?
                             data.map((d,i)=>{
                                 return(
-                                    <div className="row w-100">
+                                    <div key={`q${i}`} className="row w-100">
                                         <div className="col-12 px-0">
                                         <FormControlLabel
                                             value={d.id}
@@ -203,91 +227,85 @@ class SlambookCreate extends React.Component {
                     }
                     </FormGroup>
                     <Button disabled={disableProceedButton} onClick={this.proceedNext.bind(this)} variant="contained" color="secondary" className="w-100 mt-2 mb-4 p-2">
-                    <span className="h1">Proceed</span>
-                </Button>
+                        Proceed
+                    </Button>
                 </div>
                 {/* Dialog Start from here */}
-                <Dialog maxWidth="md" onClose={()=>this.setState({proceedModal:false,generatedLink:false})} aria-labelledby="proceed-to-share" open={proceedModal}>
+                <Dialog maxWidth="md" onClose={()=> this.handleClose()} aria-labelledby="proceed-to-share" open={proceedModal}>
                 {
                 (generatedLink)?
-                <div className="row m-auto">
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Hurrey! Link Generated</h4>
+                    <div className="row m-auto">
+                    <div className="alert alert-success" role="alert">
+                        <h4 className="alert-heading">Yeipee! Link Generated</h4>
                         <p>
-                            Click on Copy and share with your colleagues.
+                            Click on Copy and Share with your colleagues for the exicited answer. Let the fun begin!
                         </p>
                     </div>
-                    <input type="text" id="shareableLink" className="d-none" value={generatedLink} />
-                    <span className="h2">{generatedLink}</span>
+                    <div className="px-2">
+                        <input type="text" className="form-control" id="shareableLink" readonly={true} value={generatedLink} />
+                    </div>
                     <div className=" mt-3">
                         <div className="m-auto col-12">
                             <Button onClick={this.copyLink.bind(this)} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
-                                {
-                                (isCopied)
-                                ?
-                                <span className="text-center w-100 m-2 p-2">
-                                    Link Copied</span>
-                                :
-                                <span className="h2">Copy Link</span>
-                                }
+                                <span>{(isCopied) ? "Link Copied": "Copy Link"}</span>
                             </Button>
                         </div>
                     </div>
                 </div>
                 :
-                <div className="row m-auto">
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Final Step</h4>
-                        <p>
-                            Create a new UserName & Password. to view all your SLAMBOOK from next time. 
-                        </p>
+                    <div className="row m-auto">
+                        <div className="alert alert-success" role="alert">
+                            <h4 className="alert-heading">Final Step</h4>
+                            <p>
+                                Create a username and password to view all your SLAMBOOK for the next time. 
+                            </p>
+                        </div>
+                        <form noValidate autoComplete="off">
+                            <div className="mt-3">
+                                <div className="m-auto col-12">
+                                    <TextField
+                                        required
+                                        fullWidth="true"
+                                        id="uName"
+                                        label="Username"
+                                        variant="filled"
+                                        type="text"
+                                        className="col-12"
+                                    />
+                                </div>
+                            </div>
+                            <div className=" mt-3">
+                                <div className="m-auto col-12">
+                                    <TextField
+                                        required
+                                        fullWidth="true"
+                                        id="pwd"
+                                        label="Password"
+                                        variant="filled"
+                                        type="text"
+                                        className="w-100"
+                                    />
+                                </div>
+                            </div>
+                            {(error)?<span className="text-danger p-2 px-0">{error}</span>:null}
+                            <div className=" mt-3">
+                                <div className="m-auto col-12">
+                                    <Button type="submit" onClick={this.handleSubmit.bind(this)} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
+                                        {
+                                        (loader)
+                                        ?
+                                        <span>
+                                            Generating
+                                        <LinearProgress color="secondary" /></span>
+                                        :
+                                        <span>Generate Link</span>
+                                        }
+                                    </Button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <form noValidate autoComplete="off">
-                        <div className="mt-3">
-                            <div className="m-auto col-12">
-                                <TextField
-                                    required
-                                    fullWidth="true"
-                                    id="uName"
-                                    label="Username"
-                                    variant="filled"
-                                    type="text"
-                                    className="col-12"
-                                />
-                            </div>
-                        </div>
-                        <div className=" mt-3">
-                            <div className="m-auto col-12">
-                                <TextField
-                                    required
-                                    fullWidth="true"
-                                    id="pwd"
-                                    label="Password"
-                                    variant="filled"
-                                    type="password"
-                                    className="w-100"
-                                />
-                            </div>
-                        </div>
-                        {(error)?<span className="text-danger p-2 px-0">{error}</span>:null}
-                        <div className=" mt-3">
-                            <div className="m-auto col-12">
-                                <Button type="submit" onClick={this.handleSubmit.bind(this)} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
-                                    {
-                                    (loader)
-                                    ?
-                                    <span className="text-center w-100 m-2 p-2">
-                                        Generating
-                                    <LinearProgress color="secondary" /></span>
-                                    :
-                                    <span className="h2">Generate Link</span>
-                                    }
-                                </Button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                }
+                    }
                 </Dialog>
             </div>
         );

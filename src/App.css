@@ -22,3 +22,7 @@ a {
   z-index: 5;
   font-weight: bold;
 }
+
+#pwd{
+    -webkit-text-security: disc;
+}
