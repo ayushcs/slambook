@@ -80,9 +80,9 @@ class ViewSlamBook extends React.Component {
                                 <TextField
                                     required
                                     id="pwd"
-                                    label="Password"
+                                    label="Your Secret Code"
                                     variant="filled"
-                                    type="password"
+                                    type="text"
                                     onChange = {() => {this.hideError()}}
                                     className="w-100"
                                 />
