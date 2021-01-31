@@ -27,8 +27,9 @@ class ViewSlamBook extends React.Component {
             let uid = uName.toLowerCase() + '||' + pwd;
             fire.database().ref('users/'+ uid).once('value', (snapshot) => {
                 if (snapshot.val()) {
-                    this.props.history.push('/ViewSlamBook/viewlist/users=' + btoa(uid));
                     window.localStorage.setItem('SLAM_ACCESS_TOKEN', btoa(uid));
+                    let path = '/ViewSlamBook/viewlist/users=' + btoa(uid);
+                    this.props.history.push(path);
                 } else {
                     this.setState({error: "Username or Password is wrong."})
                 }

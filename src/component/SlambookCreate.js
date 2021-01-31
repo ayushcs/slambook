@@ -13,7 +13,7 @@ class SlambookCreate extends React.Component {
                 },
                 {
                     id: 1,
-                    question: "My name in your phone_______ ?",
+                    question: "You Love me just like a_______ ?",
                     added:false
                 },
                 {
@@ -276,7 +276,7 @@ class SlambookCreate extends React.Component {
                                         id="pwd"
                                         label="Password"
                                         variant="filled"
-                                        type="password"
+                                        type="text"
                                         className="w-100"
                                     />
                                 </div>
