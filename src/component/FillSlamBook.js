@@ -11,7 +11,9 @@ class FillSlamBook extends React.Component {
             loader: true,
             uid: "",
             answers: {},
-            submitModal:false
+            submitModal:false,
+            isDisabled:true,
+            askModal:false
         }
     }
 
@@ -41,6 +43,11 @@ class FillSlamBook extends React.Component {
     setAnswer(e){
         let answers = this.state.answers;
         answers[e.target.name.replace(/ques_/g, '')] = e.target.value.trim();
+        if(Object.values(answers).some(val => val !== "" )){
+            this.setState({isDisabled:false})
+        }else{
+            this.setState({isDisabled:true})
+        }
         this.setState({answers})
     }
 
@@ -54,14 +61,12 @@ class FillSlamBook extends React.Component {
         fire.database().ref(`answers/${this.state.uid}/`).push({
             answer: this.state.answers
         }).then(()=> {
-            alert("Submitted")
-            this.setState({submitModal:false})
-            this.props.history.push('/')
+            this.setState({submitModal:false,askModal:true})
         })
     }
 
     render() { 
-        const {loader,submitModal} = this.state;
+        const {loader,submitModal,isDisabled,askModal} = this.state;
         return ( 
             <div className="container-fluid">
                 <div className="row">
@@ -98,7 +103,7 @@ class FillSlamBook extends React.Component {
                             </div>
                             <div className="row mt-4 mb-3">
                                 <div className="m-auto col-10 col-sm-4">
-                                    <Button type="submit" onClick={this.submitModal.bind(this)} variant="contained" color="secondary" className="col-12">Submit</Button>
+                                    <Button disabled={isDisabled} type="submit" onClick={this.submitModal.bind(this)} variant="contained" color="secondary" className="col-12">Submit</Button>
                                 </div>
                             </div>
                         </div> 
@@ -116,7 +121,7 @@ class FillSlamBook extends React.Component {
                             </p>
                         </div>
                         <div className="px-2">
-                            <input type="text" name="shownName" className="form-control" onBlur={this.setAnswer.bind(this)}  />
+                            <input type="text" placeholder="Your Name" name="shownName" className="form-control" onBlur={this.setAnswer.bind(this)}  />
                         </div>
                         <div className=" mt-3">
                             <div className="m-auto col-12">
@@ -127,6 +132,26 @@ class FillSlamBook extends React.Component {
                         </div>
                     </div>
                 </Dialog>
+                <Dialog maxWidth="md" onClose={()=> this.setState({askModal:false})} aria-labelledby="proceed-to-share" open={askModal}>
+                    <div className="row m-auto">
+                        <div className="alert alert-success" role="alert">
+                            <p>
+                                Submitted !!<br/>Do you want to create your own?
+                            </p>
+                        </div>
+                        <div className=" mt-3">
+                            <div className="m-auto col-12">
+                                <Button onClick={()=>{this.props.history.push('/SlambookCreate')}} variant="contained" color="primary" className="col-5 mt-2 ml-2 mb-4 p-2">
+                                    Yes
+                                </Button>
+                                <Button onClick={()=>{this.props.history.push('/')}} variant="contained" color="secondary" className="col-5 mt-2 mr-2 mb-4 p-2" style={{float:"right"}}>
+                                    No
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </Dialog>
+
             </div>
         );
     }
