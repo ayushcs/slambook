@@ -2,15 +2,15 @@
 import firebase from 'firebase';
 
 var firebaseConfig = {
-    apiKey: "AIzaSyCGp5A7LVnIlfxotWHR5Cd3pmG8THvPtDY",
-    authDomain: "slambook-a6cf8.firebaseapp.com",
-    databaseURL: "https://slambook-a6cf8-default-rtdb.firebaseio.com",
-    projectId: "slambook-a6cf8",
-    storageBucket: "slambook-a6cf8.appspot.com",
-    messagingSenderId: "877474788842",
-    appId: "1:877474788842:web:d67e3d7dfabfbe43602e93",
-    measurementId: "G-Z0QVRBH4BD"
-  };
+    apiKey: "AIzaSyCkMmita4JGg_JZ09HvMCtZ8-IZipQYflY",
+    authDomain: "slambook-c99f8.firebaseapp.com",
+    databaseURL: "https://slambook-c99f8-default-rtdb.firebaseio.com",
+    projectId: "slambook-c99f8",
+    storageBucket: "slambook-c99f8.appspot.com",
+    messagingSenderId: "311202632890",
+    appId: "1:311202632890:web:f88386718f1684650e9e83",
+    measurementId: "G-RT8DZPC1ZE"
+};
 
 const fire = firebase.initializeApp(firebaseConfig);
 
