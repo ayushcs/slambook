@@ -111,7 +111,7 @@ class ViewSlamBook extends React.Component {
                         </div>
                         <div className="row mt-3">
                             <div className="m-auto col-10 col-sm-4">
-                                <Button onClick={this.home.bind(this)} variant="contained" color="primary" className="col-12">Go Back</Button>
+                                <Button onClick={this.home.bind(this)} variant="contained" color="primary" className="col-12">Homepage</Button>
                             </div>
                         </div>
                     </div>
