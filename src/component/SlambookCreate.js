@@ -1,6 +1,7 @@
 import React from 'react';
 import fire from '../config/fire';
 import {TextField, Dialog,LinearProgress, Button,FormGroup,FormControlLabel,Checkbox }from '@material-ui/core/';
+import { Link } from 'react-router-dom';
 class SlambookCreate extends React.Component {
     constructor(props) {
         super(props);
@@ -201,9 +202,16 @@ class SlambookCreate extends React.Component {
                     <div className="col-12 px-0 position-fixed text-center toplabel">
                         <p className="col-12 mt-2">Select the question and Press submit to share with your friends.</p>
                     </div>
+                    <div className="col-12 px-0 position-fixed text-center theme_color" style={{bottom: "0"}}>
+                        <Link to="../ViewSlamBook">
+                            <Button className="w-100">
+                                <span>View Slambooks</span>
+                            </Button>
+                        </Link>
+                    </div>
                     <div className="mainimage position-fixed" style={{opacity: "0.2",zIndex:"-1"}}></div>
                 </div>
-                <div className="p-2 pt-4 mt-5">
+                <div className="p-2 pt-4 mt-5 mb-4">
                     <FormGroup aria-label="position" row>
                     {
                         (data)
@@ -249,6 +257,13 @@ class SlambookCreate extends React.Component {
                             <Button onClick={this.copyLink.bind(this)} variant="contained" color="primary" className="w-100 mt-2 mb-4 p-2">
                                 <span>{(isCopied) ? "Link Copied": "Copy Link"}</span>
                             </Button>
+                            {(isCopied) ?
+                                <Link to="../ViewSlamBook">
+                                    <Button variant="contained" color="secondary" className="w-100 mt-2 mb-4 p-2">
+                                        <span>View Slambooks</span>
+                                    </Button>
+                                </Link>
+                            : null}
                         </div>
                     </div>
                 </div>
