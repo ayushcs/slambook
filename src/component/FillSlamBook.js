@@ -1,6 +1,8 @@
 import React from 'react'
 import {TextField, Button, CircularProgress,Dialog} from '@material-ui/core/';
 import fire from '../config/fire'
+import { Link } from 'react-router-dom';
+
 
 
 class FillSlamBook extends React.Component {
@@ -75,6 +77,13 @@ class FillSlamBook extends React.Component {
                     <div className="col-12 px-0 position-fixed text-center toplabel">
                         <Button onClick={()=>{this.props.history.push('/SlambookCreate')}} className="col-12">Create Your Own SlamBook Now</Button>
                     </div>
+                    <div className="col-12 px-0 position-fixed text-center theme_color" style={{bottom: "0"}}>
+                        <Link to="../ViewSlamBook">
+                            <Button className="w-100">
+                                <span>View Slambooks</span>
+                            </Button>
+                        </Link>
+                    </div>
                     <div className="mainimage position-fixed" style={{opacity: "0.2"}}></div>
                 </div>
                 {(loader)?
@@ -84,7 +93,7 @@ class FillSlamBook extends React.Component {
                 :
                     this.state.data.length > 0 ?  
                     <form>
-                        <div className="row mt-3 pt-4">
+                        <div className="row mt-3 mb-5 pt-4">
                             <div className="col-12">
                                 {this.state.data.map((value, index)=> {
                                     return (
