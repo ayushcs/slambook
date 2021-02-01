@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/slambook/static/css/main.4a230099.chunk.css",
-    "main.js": "/slambook/static/js/main.7a3303f5.chunk.js",
-    "main.js.map": "/slambook/static/js/main.7a3303f5.chunk.js.map",
+    "main.js": "/slambook/static/js/main.03c259b3.chunk.js",
+    "main.js.map": "/slambook/static/js/main.03c259b3.chunk.js.map",
     "runtime-main.js": "/slambook/static/js/runtime-main.66a681b6.js",
     "runtime-main.js.map": "/slambook/static/js/runtime-main.66a681b6.js.map",
-    "static/js/2.ac13a5e5.chunk.js": "/slambook/static/js/2.ac13a5e5.chunk.js",
-    "static/js/2.ac13a5e5.chunk.js.map": "/slambook/static/js/2.ac13a5e5.chunk.js.map",
+    "static/js/2.92504d4a.chunk.js": "/slambook/static/js/2.92504d4a.chunk.js",
+    "static/js/2.92504d4a.chunk.js.map": "/slambook/static/js/2.92504d4a.chunk.js.map",
     "static/js/3.3aef3e2b.chunk.js": "/slambook/static/js/3.3aef3e2b.chunk.js",
     "static/js/3.3aef3e2b.chunk.js.map": "/slambook/static/js/3.3aef3e2b.chunk.js.map",
     "index.html": "/slambook/index.html",
     "static/css/main.4a230099.chunk.css.map": "/slambook/static/css/main.4a230099.chunk.css.map",
-    "static/js/2.ac13a5e5.chunk.js.LICENSE.txt": "/slambook/static/js/2.ac13a5e5.chunk.js.LICENSE.txt",
+    "static/js/2.92504d4a.chunk.js.LICENSE.txt": "/slambook/static/js/2.92504d4a.chunk.js.LICENSE.txt",
     "static/media/App.css": "/slambook/static/media/main_bg.7fe26c55.webp",
     "static/media/main_logo.663cb6dc.png": "/slambook/static/media/main_logo.663cb6dc.png"
   },
   "entrypoints": [
     "static/js/runtime-main.66a681b6.js",
-    "static/js/2.ac13a5e5.chunk.js",
+    "static/js/2.92504d4a.chunk.js",
     "static/css/main.4a230099.chunk.css",
-    "static/js/main.7a3303f5.chunk.js"
+    "static/js/main.03c259b3.chunk.js"
   ]
 }
